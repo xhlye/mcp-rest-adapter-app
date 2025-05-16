@@ -1,0 +1,6 @@
+{
+  "swaggerJson": "{\"swagger\":\"2.0\",\"info\":{\"title\":\"Simple Test API\",\"version\":\"1.0.0\"},\"paths\":{\"/test\":{\"get\":{\"operationId\":\"testApi\",\"parameters\":[{\"name\":\"message\",\"in\":\"query\",\"type\":\"string\"}],\"responses\":{\"200\":{\"description\":\"OK\"}}}}}}",
+  "baseUrl": "http://localhost:8080",
+  "serverName": "test-server",
+  "serverVersion": "1.0.0"
+} 

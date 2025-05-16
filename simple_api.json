@@ -1,0 +1,6 @@
+{
+  "swaggerJson": "{\"swagger\":\"2.0\",\"info\":{\"title\":\"Simple API\",\"version\":\"1.0\"},\"paths\":{\"/echo\":{\"get\":{\"operationId\":\"echo\",\"parameters\":[{\"name\":\"message\",\"in\":\"query\",\"type\":\"string\"}],\"responses\":{\"200\":{\"description\":\"OK\"}}}}}}",
+  "baseUrl": "http://localhost:8080",
+  "serverName": "echo-api",
+  "serverVersion": "1.0.0"
+} 

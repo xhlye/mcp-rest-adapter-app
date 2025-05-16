@@ -1,0 +1,6 @@
+{
+  "swaggerJson": "{\"swagger\":\"2.0\",\"info\":{\"description\":\"测试API文档\",\"version\":\"1.0\",\"title\":\"测试API\"},\"host\":\"api.example.com\",\"basePath\":\"/api\",\"paths\":{\"/hello\":{\"get\":{\"summary\":\"问候API\",\"operationId\":\"sayHello\",\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"name\",\"in\":\"query\",\"description\":\"用户名\",\"required\":false,\"type\":\"string\"}],\"responses\":{\"200\":{\"description\":\"成功响应\",\"schema\":{\"type\":\"object\",\"properties\":{\"message\":{\"type\":\"string\"}}}}}}}}}",
+  "baseUrl": "https://api.example.com",
+  "serverName": "test-api",
+  "serverVersion": "1.0.0"
+} 
