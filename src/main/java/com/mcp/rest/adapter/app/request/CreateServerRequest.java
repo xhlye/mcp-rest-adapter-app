@@ -4,167 +4,101 @@
 
 package com.mcp.rest.adapter.app.request;
 
-import com.mcp.rest.adapter.app.config.RestApiConfig;
+import com.mcp.rest.adapter.app.config.McpServerConfig;
+
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * 创建MCP服务器的请求体
  */
 public class CreateServerRequest {
     /**
-     * Swagger API的JSON字符串，定义了API的结构和端点
+     * 基础服务信息
      */
-    private String swaggerJson;
+    private ServerInfo serverInfo = new ServerInfo();
     
     /**
-     * API的基础URL，指向实际服务的地址
+     * API认证信息
      */
-    private String baseUrl;
+    private ApiAuth apiAuth = new ApiAuth();
     
     /**
-     * 服务器名称，用于标识MCP服务器
+     * MCP服务配置
      */
-    private String serverName;
+    private McpAuth mcpAuth = new McpAuth();
     
     /**
-     * 服务器版本，用于版本控制
+     * 性能配置
      */
-    private String serverVersion;
-
-    /**
-     * Bearer Token认证令牌
-     */
-    private String bearerToken;
-
-    /**
-     * Basic认证用户名
-     */
-    private String username;
-
-    /**
-     * Basic认证密码
-     */
-    private String password;
-
-    /**
-     * API Key值
-     */
-    private String apiKey;
-
-    /**
-     * API Key名称
-     */
-    private String apiKeyName;
-
-    /**
-     * API Key位置(HEADER/QUERY/COOKIE)
-     */
-    private RestApiConfig.ApiKeyLocation apiKeyLocation;
-
-    /**
-     * 自定义认证令牌
-     */
-    private String customAuthToken;
-
-    /**
-     * 自定义请求头
-     */
-    private Map<String, String> headers = new HashMap<>();
+    private PerformanceConfig performanceConfig = new PerformanceConfig();
     
-    public String getSwaggerJson() {
-        return swaggerJson;
+    // Getters and setters for main class fields
+    public ServerInfo getServerInfo() {
+        return serverInfo;
     }
     
-    public void setSwaggerJson(String swaggerJson) {
-        this.swaggerJson = swaggerJson;
+    public void setServerInfo(ServerInfo serverInfo) {
+        this.serverInfo = serverInfo != null ? serverInfo : new ServerInfo();
     }
     
-    public String getBaseUrl() {
-        return baseUrl;
+    public ApiAuth getApiAuth() {
+        return apiAuth;
     }
     
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
+    public void setApiAuth(ApiAuth apiAuth) {
+        this.apiAuth = apiAuth != null ? apiAuth : new ApiAuth();
     }
     
-    public String getServerName() {
-        return serverName;
+    public McpAuth getMcpAuth() {
+        return mcpAuth;
     }
     
-    public void setServerName(String serverName) {
-        this.serverName = serverName;
+    public void setMcpAuth(McpAuth mcpAuth) {
+        this.mcpAuth = mcpAuth != null ? mcpAuth : new McpAuth();
     }
     
-    public String getServerVersion() {
-        return serverVersion;
+    public PerformanceConfig getPerformanceConfig() {
+        return performanceConfig;
     }
     
-    public void setServerVersion(String serverVersion) {
-        this.serverVersion = serverVersion;
+    public void setPerformanceConfig(PerformanceConfig performanceConfig) {
+        this.performanceConfig = performanceConfig != null ? performanceConfig : new PerformanceConfig();
     }
-
-    public String getBearerToken() {
-        return bearerToken;
-    }
-
-    public void setBearerToken(String bearerToken) {
-        this.bearerToken = bearerToken;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    public String getApiKeyName() {
-        return apiKeyName;
-    }
-
-    public void setApiKeyName(String apiKeyName) {
-        this.apiKeyName = apiKeyName;
-    }
-
-    public RestApiConfig.ApiKeyLocation getApiKeyLocation() {
-        return apiKeyLocation;
-    }
-
-    public void setApiKeyLocation(RestApiConfig.ApiKeyLocation apiKeyLocation) {
-        this.apiKeyLocation = apiKeyLocation;
-    }
-
-    public String getCustomAuthToken() {
-        return customAuthToken;
-    }
-
-    public void setCustomAuthToken(String customAuthToken) {
-        this.customAuthToken = customAuthToken;
-    }
-
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
-
-    public void setHeaders(Map<String, String> headers) {
-        this.headers = headers != null ? headers : new HashMap<>();
+    
+    /**
+     * 构建MCP服务器配置
+     * @return MCP服务器配置
+     */
+    public McpServerConfig buildMcpServerConfig() {
+        McpServerConfig.Builder builder = McpServerConfig.builder();
+        
+        // 设置鉴权类型
+        switch (mcpAuth.getMcpAuthType()) {
+            case API_KEY:
+                builder.apiKeyAuth();
+                // 添加API Key
+                for (Map.Entry<String, String> entry : mcpAuth.getMcpApiKeys().entrySet()) {
+                    builder.addApiKey(entry.getKey(), entry.getValue());
+                }
+                break;
+            case JWT_TOKEN:
+                builder.jwtAuth(mcpAuth.getMcpJwtSecret());
+                break;
+            case CUSTOM:
+                builder.customAuth(mcpAuth.getMcpCustomAuthClass());
+                break;
+            default:
+                builder.noAuth();
+        }
+        
+        // 设置限流配置
+        builder.enableRateLimiting(performanceConfig.isEnableRateLimiting());
+        if (performanceConfig.isEnableRateLimiting()) {
+            builder.maxTps(performanceConfig.getMaxTps())
+                  .maxConcurrentRequests(performanceConfig.getMaxConcurrentRequests())
+                  .requestTimeout(performanceConfig.getRequestTimeoutMs());
+        }
+        
+        return builder.build();
     }
 } 

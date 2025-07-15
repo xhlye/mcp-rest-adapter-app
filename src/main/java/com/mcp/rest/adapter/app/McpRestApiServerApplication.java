@@ -4,8 +4,7 @@
 
 package com.mcp.rest.adapter.app;
 
-import com.mcp.rest.adapter.app.service.McpEmbeddedService;
-import com.mcp.rest.adapter.app.service.McpRestApiService;
+import com.mcp.rest.adapter.app.service.DynamicMcpServerService;
 import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,39 +23,29 @@ public class McpRestApiServerApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(McpRestApiServerApplication.class);
     
-    private static McpRestApiService mcpRestApiService;
-    private static McpEmbeddedService mcpEmbeddedService;
+    private static DynamicMcpServerService dynamicMcpServerService;
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(McpRestApiServerApplication.class, args);
         
         // 获取服务实例并保存引用，以便在JVM关闭时使用
-        mcpRestApiService = context.getBean(McpRestApiService.class);
-        mcpEmbeddedService = context.getBean(McpEmbeddedService.class);
+        dynamicMcpServerService = context.getBean(DynamicMcpServerService.class);
         
         // 添加JVM关闭钩子，确保所有服务器实例被正确关闭
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             logger.info("Application shutting down, stopping all MCP servers...");
-            if (mcpRestApiService != null) {
-                mcpRestApiService.stopAllServers();
-            }
-            if (mcpEmbeddedService != null) {
-                mcpEmbeddedService.stopAllServers();
+            if (dynamicMcpServerService != null) {
+                dynamicMcpServerService.stopAllServers();
             }
             logger.info("All MCP servers stopped");
         }));
         
         logger.info("MCP REST API Server started");
     }
-    
+
     @Bean
-    public McpRestApiService mcpRestApiService() {
-        return new McpRestApiService();
-    }
-    
-    @Bean
-    public McpEmbeddedService mcpEmbeddedService() {
-        return new McpEmbeddedService();
+    public DynamicMcpServerService mcpEmbeddedService() {
+        return new DynamicMcpServerService();
     }
 
     /**
@@ -65,11 +54,8 @@ public class McpRestApiServerApplication {
     @PreDestroy
     public void onShutdown() {
         logger.info("Spring context closing, stopping all MCP servers...");
-        if (mcpRestApiService != null) {
-            mcpRestApiService.stopAllServers();
-        }
-        if (mcpEmbeddedService != null) {
-            mcpEmbeddedService.stopAllServers();
+        if (dynamicMcpServerService != null) {
+            dynamicMcpServerService.stopAllServers();
         }
     }
 } 

@@ -24,12 +24,13 @@ public class McpConnectionTest {
     @Test
     public void testConnectionProblems() {
         // 使用服务器中创建的服务器ID
-        String serverId = "server-1752224519453";
-        String baseUrl = "http://localhost:8080";
+        String serverId = "server-1752226101706";
+        String baseUrl = "http://localhost:8081";
         
         // SSE连接URL - 使用服务器ID参数
-        String sseUrl = baseUrl + "/api/embeddedMcp/sse/server-" + serverId;
-        
+        //String sseUrl = baseUrl + "/sse/" + serverId;
+        String sseUrl = baseUrl + "/mcp/sse";
+
         logger.info("尝试连接MCP服务器，SSE URL: {}", sseUrl);
         
         // 配置HTTP客户端，增加超时时间
@@ -74,7 +75,7 @@ public class McpConnectionTest {
         String baseUrl = "http://localhost:8080";
         
         // SSE连接URL - 使用服务器ID参数
-        String sseUrl = baseUrl + "/api/embeddedMcp/sse?serverId=" + serverId;
+        String sseUrl = baseUrl + "/sse/" + serverId;
         
         logger.info("尝试连接MCP服务器，SSE URL: {}", sseUrl);
         
