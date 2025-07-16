@@ -19,7 +19,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <mcp.sdk.version>0.10.0-SNAPSHOT</mcp.sdk.version>
+        <mcp.sdk.version>1.0.0-RELEASE</mcp.sdk.version>
         <swagger-parser.version>2.1.16</swagger-parser.version>
         <httpclient5.version>5.2.3</httpclient5.version>
         <tomcat.version>10.1.17</tomcat.version>
@@ -63,18 +63,6 @@
         <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
-        </dependency>
-
-        <!-- Tomcat dependencies for embedding -->
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-            <version>${tomcat.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-websocket</artifactId>
-            <version>${tomcat.version}</version>
         </dependency>
 
         <!-- Test Dependencies -->

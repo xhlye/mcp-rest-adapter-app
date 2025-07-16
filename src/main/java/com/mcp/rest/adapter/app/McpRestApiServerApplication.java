@@ -44,7 +44,7 @@ public class McpRestApiServerApplication {
     }
 
     @Bean
-    public DynamicMcpServerService mcpEmbeddedService() {
+    public DynamicMcpServerService dynamicMcpServerService() {
         return new DynamicMcpServerService();
     }
 
